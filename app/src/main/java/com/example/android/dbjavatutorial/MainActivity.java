@@ -18,8 +18,7 @@ import android.widget.Toast;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
-    //added this line to test with git
+    
     private WordViewModel wordViewModel;
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
 
