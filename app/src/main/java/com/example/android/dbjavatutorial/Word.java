@@ -7,6 +7,9 @@ import android.support.annotation.NonNull;
 @Entity(tableName = "word_table")
 public class Word {
 
+    //need getter and constructor in any entity class so Room knows to instantiate the object
+    //(into SQLite entities)
+
     @PrimaryKey
     @NonNull
     private String word;

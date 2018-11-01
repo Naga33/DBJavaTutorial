@@ -12,13 +12,18 @@ import java.util.List;
 
 public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordViewHolder> {
 
+    //Need this class for the RecyclerView.
+
+
     private final LayoutInflater inflater;
-    private List<Word> words; //cached copy of words
+    private List<Word> words; //caches copy of words
 
     WordListAdapter(Context context){
         inflater = LayoutInflater.from(context);
     }
 
+    //this method is invoked when observer causes onChanged() method to be called (in MainActivity)
+    //this method updates cached data and refreshes the displayed list
     public void setWords(List<Word> words) {
         this.words = words;
         notifyDataSetChanged();

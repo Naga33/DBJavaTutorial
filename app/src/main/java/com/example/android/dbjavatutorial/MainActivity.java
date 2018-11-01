@@ -18,7 +18,8 @@ import android.widget.Toast;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    
+
+    //wordViewModel is reference to abstraction layer between Activity and Repository
     private WordViewModel wordViewModel;
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
 
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //add new word to db button & listener & intent
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,27 +40,34 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        //set up RecyclerView with WordListAdapter and LinearLayout
         RecyclerView recyclerView = findViewById(R.id.recyclerview);//layout for recylcerview in content_main.xml
         final WordListAdapter adapter = new WordListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //using ViewModelProviders to associate WordViewModel with UI controller
+
+        //ViewModelProviders associate WordViewModel with UI controller (create link)
+        //if activity is destroyed after e.g. a configuration change, when the activity restarts,
+        //the ViewModelProviders re-instantiates the WordViewModel data in the UI
         wordViewModel = ViewModelProviders.of(this).get(WordViewModel.class);
 
-        //observer for LiveData (List<Word>?) returned by getAllWords() (from WordRepository?)
+        
+        //observer for LiveData (List<Word>) returned by getAllWords() (method from WordViewModel I think
+        // because of abstraction layers. The method is originally from WordDao but have many wrappers)
         wordViewModel.getAllWords().observe(this, new Observer<List<Word>>() {
             @Override
             public void onChanged(@Nullable final List<Word> words) {
                 //Update cached copy of words in adapter
-                adapter.setWords(words);
+                adapter.setWords(words); // where does this adapter variable come from? where is it instantiated?
             }
         });
     }
 
     //this method is to say what to do if the NewWordActivity returns RESULT_OK (new word able to be put in db)
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data); //do not understand these parameters
+        super.onActivityResult(requestCode, resultCode, data); //TODO: understand these parameters
 
         if(requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
             Word word = new Word(data.getStringExtra(NewWordActivity.EXTRA_REPLY)); //EXTRA_REPLY from NewWordActivity class
